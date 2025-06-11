@@ -3,6 +3,7 @@ package clickhouselogger
 import (
 	"context"
 	"fmt"
+	"maps"
 	"net/url"
 	"os"
 	"strings"
@@ -127,6 +128,12 @@ func (l *Logger) WithFields(fields logging.Fields) logging.Logger {
 		writer: l.writer,
 		fields: fields,
 	}
+}
+
+func (l *Logger) WithAdditionalFields(fields logging.Fields) logging.Logger {
+	merged := fields
+	maps.Copy(merged, l.fields)
+	return l.WithFields(merged)
 }
 
 func (l *Logger) Logger() logging.Logger {
